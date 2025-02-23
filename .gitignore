@@ -1,3 +1,7 @@
+# Project files
+config.yml
+inventory.ini
+
 # Python-generated files
 __pycache__/
 *.py[oc]
@@ -8,3 +12,12 @@ wheels/
 
 # Virtual environments
 .venv
+
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

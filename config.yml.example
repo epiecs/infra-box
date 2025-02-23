@@ -1,0 +1,20 @@
+---
+# Location where configuration files will be stored.
+config_dir: '~'
+
+# Docker/dockge settings
+dockge_port: 5001
+dockge_folder: "/srv/dockge"
+stacks_folder: "/srv/stacks"
+
+# Domain names configuration (related services need to be enabled).
+domain_name_enable: false
+domain_name: 'infra.box'
+
+domain_pihole: 'pihole'          # to access pihole via: http://pihole.infra.box
+domain_phpipam: 'grafana'        # to access phpipam via: http://phpipam.infra.box
+
+# Pi-hole configuration.
+pihole_hostname: pihole
+pihole_timezone: Europe/Brussels
+pihole_password: "change-this-password"
