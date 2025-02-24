@@ -14,14 +14,16 @@ services:
       - {{ phpipam_port }}:80
     environment:
       - TZ={{ timezone }}
-      - IPAM_DATABASE_HOST=phpipam-mariadb
-      - IPAM_DATABASE_PASS={{ phpipam_db_password }}
-      - IPAM_DATABASE_WEBHOST=%
       - IPAM_TRUST_X_FORWARDED=true
+      # - IPAM_CONFIG_FILE="/config/config.php"
+      # - IPAM_DATABASE_HOST=phpipam-mariadb
+      # - IPAM_DATABASE_PASS={{ phpipam_db_password }}
+      # - IPAM_DATABASE_WEBHOST=%
     restart: unless-stopped
     volumes:
       - phpipam-logo:/phpipam/css/images/logo
       - phpipam-ca:/usr/local/share/ca-certificates:ro
+      - ./data/config/:/config
     depends_on:
       - phpipam-mariadb
     networks:
