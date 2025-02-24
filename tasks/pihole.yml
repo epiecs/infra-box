@@ -1,0 +1,53 @@
+---
+- name: Create pihole directory
+  file:
+    path: "{{ stacks_folder }}/pihole"
+    state: directory
+    owner: root
+    group: docker
+    mode: '0775'
+
+
+- name: Copy the pihole compose file
+  template:
+    src: "pihole.compose.yaml.j2"
+    dest: "{{ stacks_folder }}/pihole/compose.yaml"
+    owner: root
+    group: docker
+    mode: '0664'
+
+- name: Start pihole
+  community.docker.docker_compose_v2:
+    project_src: "{{ stacks_folder }}/pihole"
+    state: present
+
+# - name: Remove stale dns record if they exist
+#   ansible.builtin.lineinfile:
+#     path: "{{ stacks_folder }}/pihole/config/etc/hosts"
+#     regexp: "^{{ ansible_facts['default_ipv4']['address'] }}"
+#     state: absent
+
+# - name: Add dns record
+#   ansible.builtin.lineinfile:
+#     path: "{{ stacks_folder }}/pihole/config/etc/hosts"
+#     line: "{{ ansible_facts['default_ipv4']['address'] }} {{ item }}.{{ domain_name }}"
+#   loop: 
+#     - "{{ domain_pihole }}"
+#     - "{{ domain_dockge }}"
+#     - "{{ domain_phpipam }}"
+#     - "{{ domain_traefik }}"
+#     - "{{ domain_tftp }}"
+#     - "{{ domain_directorybrowser }}"
+
+- name: Ensure pihole listens on all interfaces
+  ansible.builtin.lineinfile:
+    path: "{{ stacks_folder }}/pihole/config/etc-pihole/pihole.toml"
+    regexp: '^\s\slisteningMode'
+    line: '  listeningMode = "ALL"'
+
+- name: Restart pi-hole
+  community.docker.docker_compose_v2:
+    project_src: "{{ stacks_folder }}/pihole/"
+    build: never
+    state: restarted
+  become: false

@@ -1,0 +1,26 @@
+# {{ ansible_managed }}
+---
+networks:
+  proxy-backend:
+    name: {{ docker_proxy_network }}
+    external: true
+  tftp-services:
+    name: tftp-services
+
+services:
+  tftp:
+    tty: true
+    container_name: tftp
+    volumes:
+      - ./data:/data
+    environment:
+      - Y_CREATE=yes
+      - Y_CHMOD=777
+      - Y_CHMOD_RECURSIVE=yes
+      - Y_LANGUAGE=en_GB
+    image: palw3ey/ye3tftp
+    ports:
+      - 69:69/udp
+    networks:
+      - {{ docker_proxy_network }}
+      - tftp-services

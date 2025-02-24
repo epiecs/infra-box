@@ -25,7 +25,7 @@
     state: started
     enabled: true
 
-- name: Ensure dependencies are installed (Debian).
+- name: Ensure dependencies are installed
   ansible.builtin.apt:
     name:
       - libffi-dev
@@ -43,6 +43,10 @@
     name: "{{ ansible_user }}"
     groups: docker
     append: true
+
+- name: Create the internal network for the proxy connection
+  docker_network:
+    name: "{{ docker_proxy_network }}"
 
 # reset_connection doesn't support conditionals.
 - name: Reset connection so docker group is picked up.

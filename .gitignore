@@ -1,6 +1,9 @@
 # Project files
 config.yml
 inventory.ini
+.vscode
+.todo
+.notes
 
 # Python-generated files
 __pycache__/

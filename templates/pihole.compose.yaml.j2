@@ -1,0 +1,45 @@
+# {{ ansible_managed }}
+---
+networks:
+  proxy-backend:
+    name: {{ docker_proxy_network }}
+    external: true
+
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    restart: unless-stopped
+    hostname: {{ domain_pihole }}
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "{{ pihole_port }}:80/tcp"
+      # - "443:443/tcp"
+    environment:
+      TZ: {{ timezone }}
+      ServerIP: {{ ansible_facts['default_ipv4']['address'] }}
+      FTLCONF_webserver_api_password: {{ pihole_password }}
+      FTLCONF_dns_upstreams: 9.9.9.9;8.8.8.8
+    dns:
+      - 127.0.0.1
+      - 9.9.9.9
+    extra_hosts:
+      - "{{ domain_pihole }}.{{ domain_name }}:{{ ansible_facts['default_ipv4']['address'] }}"
+      - "{{ domain_dockge }}.{{ domain_name }}:{{ ansible_facts['default_ipv4']['address'] }}"
+      - "{{ domain_phpipam }}.{{ domain_name }}:{{ ansible_facts['default_ipv4']['address'] }}"
+      - "{{ domain_traefik }}.{{ domain_name }}:{{ ansible_facts['default_ipv4']['address'] }}"
+      - "{{ domain_tftp }}.{{ domain_name }}:{{ ansible_facts['default_ipv4']['address'] }}"
+      - "{{ domain_directorybrowser }}.{{ domain_name }}:{{ ansible_facts['default_ipv4']['address'] }}"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - "./config/etc-pihole/:/etc/pihole/"
+      - "./config/etc-dnsmasq.d/:/etc/dnsmasq.d/"
+    cap_add:
+      - NET_ADMIN
+    networks:
+      - {{ docker_proxy_network }}
+    labels:
+      - traefik.http.routers.pihole.rule=Host(`{{ domain_pihole }}.{{ domain_name }}`)
+      - traefik.http.services.pihole.loadbalancer.server.port=80

@@ -42,7 +42,7 @@ This is a ansible script to setup some basic infra that can be used in a lab:
     pip install -r requirements.txt
     ```
 
-6. Make copies of the following files and customize them to your    liking:
+6. Make copies of the following files and customize them to your liking:
     - `inventory.ini.example` to `inventory.ini` 
         - (replace IP address with your hosts IP, or comment that line and uncomment the `connection=local` line if you're running it on the host you're setting up).
     - `config.yml.example` to `config.yml`

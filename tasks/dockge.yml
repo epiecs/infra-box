@@ -15,12 +15,20 @@
     group: docker
     mode: '0770'
 
-- name: Download dockge compose file
-  get_url:
-    url: "https://dockge.kuma.pet/compose.yaml?port={{ dockge_port }}&stacksPath={{ stacks_folder }}"
+# - name: Download dockge compose file
+#   get_url:
+#     url: "https://dockge.kuma.pet/compose.yaml?port={{ dockge_port }}&stacksPath={{ stacks_folder }}"
+#     dest: "{{ dockge_folder }}/compose.yaml"
+#     group: docker
+#     mode: '0770'
+
+- name: Copy the dockge compose file
+  template:
+    src: "dockge.compose.yaml.j2"
     dest: "{{ dockge_folder }}/compose.yaml"
+    owner: root
     group: docker
-    mode: '0770'
+    mode: '0664'
 
 - name: Start dockge
   community.docker.docker_compose_v2:

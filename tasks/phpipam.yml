@@ -1,0 +1,22 @@
+---
+- name: Create phpipam directory
+  file:
+    path: "{{ stacks_folder }}/phpipam"
+    state: directory
+    owner: root
+    group: docker
+    mode: '0775'
+
+
+- name: Copy the phpipam compose file
+  template:
+    src: "phpipam.compose.yaml.j2"
+    dest: "{{ stacks_folder }}/phpipam/compose.yaml"
+    owner: root
+    group: docker
+    mode: '0664'
+
+- name: Start phpipam
+  community.docker.docker_compose_v2:
+    project_src: "{{ stacks_folder }}/phpipam"
+    state: present

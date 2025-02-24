@@ -4,23 +4,38 @@
   become: true
 
   pre_tasks:
-    - name: Load configuration (with defaults from example file).
+    - name: Load configuration from config.yaml.
       ansible.builtin.include_vars: "{{ item }}"
       loop:
         - config.yml
 
-    - name: Ensure apt cache is up to date.
-      ansible.builtin.apt:
-        update_cache: true
-        cache_valid_time: 3600
-
-  handlers:
-    - name: Include handlers.
-      ansible.builtin.import_tasks: tasks/handlers.yml
+    # - name: Ensure apt cache is up to date.
+    #   ansible.builtin.apt:
+    #     update_cache: true
+    #     cache_valid_time: 3600
 
   tasks:
+    # - name: Setup issue file
+    #   ansible.builtin.import_tasks: tasks/issue.yml
+    
     # - name: Setup Docker
     #   ansible.builtin.import_tasks: tasks/docker.yml
 
-    - name: Setup Dockge
-      ansible.builtin.import_tasks: tasks/dockge.yml
+    # - name: Setup Dockge
+    #   ansible.builtin.import_tasks: tasks/dockge.yml
+
+    - name: Setup Pihole
+      ansible.builtin.import_tasks: tasks/pihole.yml
+    
+    # - name: Setup PhpIpam
+    #   ansible.builtin.import_tasks: tasks/phpipam.yml
+
+    # - name: Setup Tftp
+    #   ansible.builtin.import_tasks: tasks/tftp.yml
+
+    # - name: Setup Directory Browser
+    #   ansible.builtin.import_tasks: tasks/directorybrowser.yml
+    
+    # - name: Setup Traefik
+    #   ansible.builtin.import_tasks: tasks/traefik.yml
+

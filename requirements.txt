@@ -6,10 +6,16 @@ ansible-core==2.18.2
     # via ansible
 ansible-pylibssh==1.2.2
     # via infra-box (pyproject.toml)
+certifi==2025.1.31
+    # via requests
 cffi==1.17.1
     # via cryptography
+charset-normalizer==3.4.1
+    # via requests
 cryptography==44.0.1
     # via ansible-core
+idna==3.10
+    # via requests
 jinja2==3.1.5
     # via ansible-core
 markupsafe==3.0.2
@@ -22,5 +28,9 @@ pycparser==2.22
     # via cffi
 pyyaml==6.0.2
     # via ansible-core
+requests==2.32.3
+    # via infra-box (pyproject.toml)
 resolvelib==1.0.1
     # via ansible-core
+urllib3==2.3.0
+    # via requests

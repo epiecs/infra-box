@@ -1,0 +1,30 @@
+---
+- name: Create tftp directory
+  file:
+    path: "{{ stacks_folder }}/tftp"
+    state: directory
+    owner: root
+    group: docker
+    mode: '0775'
+
+- name: Create tftp data directory
+  file:
+    path: "{{ stacks_folder }}/tftp/data"
+    state: directory
+    owner: root
+    group: docker
+    mode: '0777'
+
+
+- name: Copy the tftp compose file
+  template:
+    src: "tftp.compose.yaml.j2"
+    dest: "{{ stacks_folder }}/tftp/compose.yaml"
+    owner: root
+    group: docker
+    mode: '0664'
+
+- name: Start tftp
+  community.docker.docker_compose_v2:
+    project_src: "{{ stacks_folder }}/tftp"
+    state: present

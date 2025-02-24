@@ -1,0 +1,19 @@
+---
+
+- name: Remove existing IP issue file
+  file:
+    path: "/etc/issue"
+    state: absent
+
+- name: Remove existing issue file
+  file:
+    path: "/etc/issue.d/IP.issue"
+    state: absent
+
+- name: Copy the issue file
+  template:
+    src: "issue.j2"
+    dest: "/etc/issue"
+    owner: root
+    group: root
+    mode: '0644'

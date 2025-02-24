@@ -1,0 +1,61 @@
+# {{ ansible_managed }}
+---
+networks:
+  proxy-backend:
+    name: {{ docker_proxy_network }}
+    external: true
+  phpipam-services:
+    name: phpipam-services
+
+services:
+  phpipam-web:
+    image: phpipam/phpipam-www:latest
+    ports:
+      - {{ phpipam_port }}:80
+    environment:
+      - TZ={{ timezone }}
+      - IPAM_DATABASE_HOST=phpipam-mariadb
+      - IPAM_DATABASE_PASS={{ phpipam_db_password }}
+      - IPAM_DATABASE_WEBHOST=%
+      - IPAM_TRUST_X_FORWARDED=true
+    restart: unless-stopped
+    volumes:
+      - phpipam-logo:/phpipam/css/images/logo
+      - phpipam-ca:/usr/local/share/ca-certificates:ro
+    depends_on:
+      - phpipam-mariadb
+    networks:
+      - {{ docker_proxy_network }}
+      - phpipam-services
+    labels:
+      - traefik.http.routers.phpipam.rule=Host(`{{ domain_phpipam }}.{{ domain_name }}`)
+      - traefik.http.services.phpipam.loadbalancer.server.port=80
+
+  phpipam-cron:
+    image: phpipam/phpipam-cron:latest
+    environment:
+      - TZ=Europe/London
+      - IPAM_DATABASE_HOST=phpipam-mariadb
+      - IPAM_DATABASE_PASS={{ phpipam_db_password }}
+      - SCAN_INTERVAL=1h
+    restart: unless-stopped
+    volumes:
+      - phpipam-ca:/usr/local/share/ca-certificates:ro
+    depends_on:
+      - phpipam-mariadb
+    networks:
+      - phpipam-services
+
+  phpipam-mariadb:
+    image: mariadb:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD={{ phpipam_db_password }}
+    restart: unless-stopped
+    volumes:
+      - ./data/phpipam-db-data:/var/lib/mysql
+    networks:
+      - phpipam-services
+
+volumes:
+  phpipam-logo:
+  phpipam-ca:

@@ -1,0 +1,22 @@
+---
+- name: Create directorybrowser directory
+  file:
+    path: "{{ stacks_folder }}/directorybrowser"
+    state: directory
+    owner: root
+    group: docker
+    mode: '0775'
+
+
+- name: Copy the directorybrowser compose file
+  template:
+    src: "directorybrowser.compose.yaml.j2"
+    dest: "{{ stacks_folder }}/directorybrowser/compose.yaml"
+    owner: root
+    group: docker
+    mode: '0664'
+
+- name: Start directorybrowser
+  community.docker.docker_compose_v2:
+    project_src: "{{ stacks_folder }}/directorybrowser"
+    state: present

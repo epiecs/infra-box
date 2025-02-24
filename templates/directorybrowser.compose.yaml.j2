@@ -1,0 +1,19 @@
+# {{ ansible_managed }}
+---
+networks:
+  proxy-backend:
+    name: {{ docker_proxy_network }}
+    external: true
+
+services:
+  gossa:
+    volumes:
+      - /srv/stacks/tftp/data:/shared
+    ports:
+      - {{ directorybrowser_port }}:8001
+    image: pldubouilh/gossa
+    networks:
+      - {{ docker_proxy_network }}
+    labels:
+      - traefik.http.routers.directorybrowser.rule=Host(`{{ domain_directorybrowser }}.{{ domain_name }}`)
+      - traefik.http.services.directorybrowser.loadbalancer.server.port=8001

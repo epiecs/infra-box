@@ -1,0 +1,22 @@
+---
+- name: Create traefik directory
+  file:
+    path: "{{ stacks_folder }}/traefik"
+    state: directory
+    owner: root
+    group: docker
+    mode: '0775'
+
+
+- name: Copy the traefik compose file
+  template:
+    src: "traefik.compose.yaml.j2"
+    dest: "{{ stacks_folder }}/traefik/compose.yaml"
+    owner: root
+    group: docker
+    mode: '0664'
+
+- name: Start traefik
+  community.docker.docker_compose_v2:
+    project_src: "{{ stacks_folder }}/traefik"
+    state: present

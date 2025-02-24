@@ -1,0 +1,24 @@
+# {{ ansible_managed }}
+---
+networks:
+  proxy-backend:
+    name: {{ docker_proxy_network }}
+    external: true
+
+services:
+  dockge:
+    image: louislam/dockge:1
+    restart: unless-stopped
+    ports:
+      - {{ dockge_port }}:5001
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data:/app/data
+      - {{ stacks_folder }}:/srv/stacks
+    environment:
+      - DOCKGE_STACKS_DIR={{ stacks_folder }}
+    networks:
+      - "{{ docker_proxy_network }}"
+    labels:
+      - traefik.http.routers.dockge.rule=Host(`{{ domain_dockge }}.{{ domain_name }}`)
+      - traefik.http.services.dockge.loadbalancer.server.port=5001
