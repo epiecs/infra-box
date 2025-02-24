@@ -50,3 +50,15 @@ This is a ansible script to setup some basic infra that can be used in a lab:
 7. Check `config.yml` and update this to your liking
 
 8. Run the playbook: `ansible-playbook main.yml`
+
+9. Point your dns the ip of your box - or update your hosts file
+
+10. You can now use the following resources
+
+    ```
+    pihole.infra.box/admin
+    traefik.infra.box:8080
+    phpipam.infra.box
+    dockge.infra.box
+    tftp.infra.box -> only on port 69 with the tftp protocol
+    ```
