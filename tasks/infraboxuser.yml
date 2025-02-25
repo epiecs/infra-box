@@ -1,0 +1,14 @@
+---
+- name: Add {{infrabox_user_name}} user
+  user:
+    name: "{{infrabox_user_name}}"
+    password: "{{ infrabox_user_pass | password_hash('sha512', 'infrasalt') }}"
+    groups:
+      - sudo
+      - adm
+      - docker
+    state: present
+    create_home: true
+    append: true
+    shell: /bin/bash
+    home: "/home/{{infrabox_user_name}}"

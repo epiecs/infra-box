@@ -21,6 +21,7 @@ services:
     image: palw3ey/ye3tftp
     ports:
       - 69:69/udp
+    restart: unless-stopped
     networks:
       - {{ docker_proxy_network }}
       - tftp-services

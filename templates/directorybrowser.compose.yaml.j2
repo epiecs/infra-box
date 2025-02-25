@@ -14,6 +14,7 @@ services:
     image: pldubouilh/gossa
     networks:
       - {{ docker_proxy_network }}
+    restart: unless-stopped
     labels:
       - traefik.http.routers.directorybrowser.rule=Host(`{{ domain_directorybrowser }}.{{ domain_name }}`)
       - traefik.http.services.directorybrowser.loadbalancer.server.port=8001

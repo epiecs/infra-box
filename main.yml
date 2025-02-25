@@ -39,3 +39,6 @@
     - name: Setup Traefik
       ansible.builtin.import_tasks: tasks/traefik.yml
 
+    - name: "Create {{ infrabox_user_name }} user"
+      ansible.builtin.import_tasks: tasks/infraboxuser.yml
+      when: infrabox_user_enable

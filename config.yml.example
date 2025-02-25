@@ -14,6 +14,11 @@ domain_directorybrowser: 'files'
 # Global settings
 timezone: Europe/Brussels
 
+# User setting
+infrabox_user_enable: true
+infrabox_user_name: infrabox
+infrabox_user_pass: Infra.Box
+
 # Dockge settings
 dockge_port: 5001
 dockge_folder: "/srv/dockge"
