@@ -21,7 +21,9 @@ services:
       - "{{ docker_proxy_network }}"
     labels:
       - traefik.enable=true
-      - traefik.http.routers.dockge.tls=true
-      - traefik.http.routers.dockge.entrypoints=websecure
-      - traefik.http.routers.dockge.rule=Host(`{{ domain_dockge }}.{{ domain_name }}`)
-      - traefik.http.services.dockge.loadbalancer.server.port=5001
+      - traefik.http.routers.dockge-http.entrypoints=web
+      - traefik.http.routers.dockge-http.rule=Host(`{{ domain_dockge }}.{{ domain_name }}`)
+      - traefik.http.routers.dockge-https.entrypoints=websecure
+      - traefik.http.routers.dockge-https.rule=Host(`{{ domain_dockge }}.{{ domain_name }}`)
+      - traefik.http.routers.dockge-https.tls=true
+      - traefik.http.services.dockge-https.loadbalancer.server.port=5001
