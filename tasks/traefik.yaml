@@ -7,6 +7,13 @@
     group: docker
     mode: '0775'
 
+- name: Create traefik config directory
+  file:
+    path: "{{ stacks_folder }}/traefik/config"
+    state: directory
+    owner: root
+    group: docker
+    mode: '0775'
 
 - name: Copy the traefik compose file
   template:
@@ -15,6 +22,14 @@
     owner: root
     group: docker
     mode: '0664'
+
+- name: Copy the traefik config file
+  template:
+    src: "traefik.config.yaml.j2"
+    dest: "{{ stacks_folder }}/traefik/config/traefik.yaml"
+    owner: root
+    group: docker
+    mode: '0775'
 
 - name: Start traefik
   community.docker.docker_compose_v2:

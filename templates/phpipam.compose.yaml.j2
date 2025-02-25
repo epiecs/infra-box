@@ -23,13 +23,16 @@ services:
     volumes:
       - phpipam-logo:/phpipam/css/images/logo
       - phpipam-ca:/usr/local/share/ca-certificates:ro
-      - ./data/config/:/config
+      - ./data/config/config.php:/phpipam/config.dist.php
     depends_on:
       - phpipam-mariadb
     networks:
       - {{ docker_proxy_network }}
       - phpipam-services
     labels:
+      - traefik.enable=true
+      - traefik.http.routers.phpipam.tls=true
+      - traefik.http.routers.phpipam.entrypoints=websecure
       - traefik.http.routers.phpipam.rule=Host(`{{ domain_phpipam }}.{{ domain_name }}`)
       - traefik.http.services.phpipam.loadbalancer.server.port=80
 

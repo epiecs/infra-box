@@ -8,13 +8,13 @@ networks:
 services:
   traefik:
     image: traefik:v3.3
-    command: --api.insecure=true --providers.docker
     ports:
       - 80:80
       - 443:443
       - 8080:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./config/traefik.yaml:/etc/traefik/traefik.yaml:ro
     restart: unless-stopped
     networks:
       - {{ docker_proxy_network }}

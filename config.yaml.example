@@ -1,0 +1,40 @@
+---
+# Domain names configuration (related services need to be enabled).
+domain_name_enable: false
+domain_name: 'infra.box'
+
+# The main domain names - eg pihole.infra.box
+domain_pihole: 'pihole'
+domain_dockge: 'dockge'
+domain_phpipam: 'phpipam'
+domain_traefik: 'traefik'
+domain_tftp: 'tftp'
+domain_directorybrowser: 'files'
+
+# Global settings
+timezone: Europe/Brussels
+
+# User setting
+infrabox_user_enable: true
+infrabox_user_name: infrabox
+infrabox_user_pass: Infra.Box
+
+# Dockge settings
+dockge_port: 5001
+dockge_folder: "/srv/dockge"
+stacks_folder: "/srv/stacks"
+
+# Pi-hole configuration
+pihole_port: 8053
+pihole_password: "Infra.Box"
+
+# Phpipam configuration
+phpipam_port: 8100
+phpipam_password: "Infra.Box"
+phpipam_db_password: "Infra.Box"
+
+# Gossa directory browser
+directorybrowser_port: 8001
+
+# Docker settings
+docker_proxy_network: proxy-backend

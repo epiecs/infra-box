@@ -41,5 +41,8 @@ services:
     networks:
       - {{ docker_proxy_network }}
     labels:
+      - traefik.enable=true
+      - traefik.http.routers.pihole.tls=true
+      - traefik.http.routers.pihole.entrypoints=websecure
       - traefik.http.routers.pihole.rule=Host(`{{ domain_pihole }}.{{ domain_name }}`)
       - traefik.http.services.pihole.loadbalancer.server.port=80
