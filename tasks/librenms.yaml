@@ -1,0 +1,37 @@
+---
+- name: Create librenms directory
+  file:
+    path: "{{ stacks_folder }}/librenms"
+    state: directory
+    owner: root
+    group: docker
+    mode: '0775'
+
+- name: Create librenms data directory
+  file:
+    path: "{{ stacks_folder }}/librenms/data/data"
+    state: directory
+    owner: root
+    group: docker
+    mode: '0775'
+
+- name: Copy the librenms compose file
+  template:
+    src: "librenms.compose.yaml.j2"
+    dest: "{{ stacks_folder }}/librenms/compose.yaml"
+    owner: root
+    group: docker
+    mode: '0664'
+
+- name: Copy the librenms environment file
+  template:
+    src: "librenms.env.j2"
+    dest: "{{ stacks_folder }}/librenms//data/librenms.env"
+    owner: root
+    group: docker
+    mode: '0775'
+
+- name: Start librenms - this will take a while
+  community.docker.docker_compose_v2:
+    project_src: "{{ stacks_folder }}/librenms"
+    state: present

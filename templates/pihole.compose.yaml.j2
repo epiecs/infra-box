@@ -26,12 +26,13 @@ services:
       - 127.0.0.1
       - 9.9.9.9
     extra_hosts:
-      - "{{ domain_pihole }}.{{ domain_name }}:{{ ansible_facts['default_ipv4']['address'] }}"
-      - "{{ domain_dockge }}.{{ domain_name }}:{{ ansible_facts['default_ipv4']['address'] }}"
-      - "{{ domain_phpipam }}.{{ domain_name }}:{{ ansible_facts['default_ipv4']['address'] }}"
-      - "{{ domain_traefik }}.{{ domain_name }}:{{ ansible_facts['default_ipv4']['address'] }}"
-      - "{{ domain_tftp }}.{{ domain_name }}:{{ ansible_facts['default_ipv4']['address'] }}"
       - "{{ domain_directorybrowser }}.{{ domain_name }}:{{ ansible_facts['default_ipv4']['address'] }}"
+      - "{{ domain_dockge }}.{{ domain_name }}:{{ ansible_facts['default_ipv4']['address'] }}"
+      - "{{ domain_librenms }}.{{ domain_name }}:{{ ansible_facts['default_ipv4']['address'] }}"
+      - "{{ domain_phpipam }}.{{ domain_name }}:{{ ansible_facts['default_ipv4']['address'] }}"
+      - "{{ domain_pihole }}.{{ domain_name }}:{{ ansible_facts['default_ipv4']['address'] }}"
+      - "{{ domain_tftp }}.{{ domain_name }}:{{ ansible_facts['default_ipv4']['address'] }}"
+      - "{{ domain_traefik }}.{{ domain_name }}:{{ ansible_facts['default_ipv4']['address'] }}"
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - "./config/etc-pihole/:/etc/pihole/"

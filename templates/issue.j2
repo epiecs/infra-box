@@ -10,7 +10,8 @@ My IP address is \4
 == Running services
 - traefik proxy
     \4:8080 or {{ domain_traefik }}.{{ domain_name }}:8080
-    point your internal dns to \4 to be able to use the caddy proxy
+    point your internal dns to \4 to 
+    be able to use the traefik proxy
 
 - dockge
     \4:{{ dockge_port }} or {{ domain_dockge }}.{{ domain_name }}
@@ -22,10 +23,11 @@ My IP address is \4
 - phpipam
     \4:{{ phpipam_port }} or {{ domain_phpipam }}.{{ domain_name }}
     DATABASE USER/PASSWORD: root / {{ phpipam_password }}
+
 - tftp server
     \4 or {{ domain_tftp }}.{{ domain_name }}
     the default port of 69/udp is used
 
-- tftp web based filebrowser
-    \4:8001 or {{ domain_directorybrowser }}.{{ domain_name }}
+- librenms
+    \4:8000 or {{ domain_librenms }}.{{ domain_name }}
 

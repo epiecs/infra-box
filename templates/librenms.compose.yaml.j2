@@ -1,0 +1,194 @@
+# {{ ansible_managed }}
+---
+networks:
+  proxy-backend:
+    name: {{ docker_proxy_network }}
+    external: true
+  librenms-services:
+    name: librenms-services
+
+services:
+  db:
+    image: mariadb:10
+    container_name: librenms_db
+    command:
+      - "mysqld"
+      - "--innodb-file-per-table=1"
+      - "--lower-case-table-names=0"
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+    volumes:
+      - "./data/db:/var/lib/mysql"
+    environment:
+      - "TZ={{ timezone }}"
+      - "MARIADB_RANDOM_ROOT_PASSWORD=yes"
+      - "MYSQL_DATABASE=librenms"
+      - "MYSQL_USER={{ librenms_db_user }}"
+      - "MYSQL_PASSWORD={{ librenms_db_pass }}"
+    restart: unless-stopped
+    networks:
+      - librenms-services
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: librenms_redis
+    environment:
+      - "TZ={{ timezone }}"
+    restart: unless-stopped
+    networks:
+      - librenms-services
+
+  msmtpd:
+    image: crazymax/msmtpd:latest
+    container_name: librenms_msmtpd
+    environment:
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_PORT=587
+      - SMTP_TLS=on
+      - SMTP_STARTTLS=on
+      - SMTP_TLS_CHECKCERT=on
+      - SMTP_AUTH=on
+      - SMTP_USER=foo
+      - SMTP_PASSWORD=bar
+      - SMTP_FROM=foo@gmail.com
+    restart: unless-stopped
+    networks:
+      - librenms-services
+
+  librenms:
+    image: librenms/librenms:latest
+    container_name: librenms
+    hostname: {{ domain_librenms }}
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    ports:
+      - {{ librenms_port }}:8000
+    depends_on:
+      - db
+      - redis
+      - msmtpd
+    volumes:
+      - "./data/librenms:/data"
+    env_file:
+      - "./data/librenms.env"
+    environment:
+      - "TZ={{ timezone }}"
+      - "PUID=1000"
+      - "PGID=1000"
+      - "DB_HOST=db"
+      - "DB_NAME=librenms"
+      - "DB_USER={{ librenms_db_user }}"
+      - "DB_PASSWORD={{ librenms_db_pass }}"
+      - "DB_TIMEOUT=60"
+    restart: unless-stopped
+    networks:
+      - {{ docker_proxy_network }}
+      - librenms-services
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.librenms-http.entrypoints=web
+      - traefik.http.routers.librenms-http.rule=Host(`{{ domain_librenms }}.{{ domain_name }}`)
+      - traefik.http.routers.librenms-https.entrypoints=websecure
+      - traefik.http.routers.librenms-https.rule=Host(`{{ domain_librenms }}.{{ domain_name }}`)
+      - traefik.http.routers.librenms-https.tls=true
+      - traefik.http.services.librenms-https.loadbalancer.server.port=8000
+
+  dispatcher:
+    image: librenms/librenms:latest
+    container_name: librenms_dispatcher
+    hostname: librenms-dispatcher
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    depends_on:
+      - librenms
+      - redis
+    volumes:
+      - "./data/librenms:/data"
+    env_file:
+      - "./data/librenms.env"
+    environment:
+      - "TZ={{ timezone }}"
+      - "PUID=1000"
+      - "PGID=1000"
+      - "DB_HOST=db"
+      - "DB_NAME=librenms"
+      - "DB_USER={{ librenms_db_user }}"
+      - "DB_PASSWORD={{ librenms_db_pass }}"
+      - "DB_TIMEOUT=60"
+      - "DISPATCHER_NODE_ID=dispatcher1"
+      - "SIDECAR_DISPATCHER=1"
+    restart: unless-stopped
+    networks:
+      - librenms-services
+
+  syslogng:
+    image: librenms/librenms:latest
+    container_name: librenms_syslogng
+    hostname: librenms-syslogng
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    depends_on:
+      - librenms
+      - redis
+    ports:
+      - target: 514
+        published: 514
+        protocol: tcp
+      - target: 514
+        published: 514
+        protocol: udp
+    volumes:
+      - "./data/librenms:/data"
+    env_file:
+      - "./data/librenms.env"
+    environment:
+      - "TZ={{ timezone }}"
+      - "PUID=1000"
+      - "PGID=1000"
+      - "DB_HOST=db"
+      - "DB_NAME=librenms"
+      - "DB_USER={{ librenms_db_user }}"
+      - "DB_PASSWORD={{ librenms_db_pass }}"
+      - "DB_TIMEOUT=60"
+      - "SIDECAR_SYSLOGNG=1"
+    restart: unless-stopped
+    networks:
+      - librenms-services
+
+  snmptrapd:
+    image: librenms/librenms:latest
+    container_name: librenms_snmptrapd
+    hostname: librenms-snmptrapd
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    depends_on:
+      - librenms
+      - redis
+    ports:
+      - target: 162
+        published: 162
+        protocol: tcp
+      - target: 162
+        published: 162
+        protocol: udp
+    volumes:
+      - "./data/librenms:/data"
+    env_file:
+      - "./data/librenms.env"
+    environment:
+      - "TZ={{ timezone }}"
+      - "PUID=1000"
+      - "PGID=1000"
+      - "DB_HOST=db"
+      - "DB_NAME=librenms"
+      - "DB_USER={{ librenms_db_user }}"
+      - "DB_PASSWORD={{ librenms_db_pass }}"
+      - "DB_TIMEOUT=60"
+      - "SIDECAR_SNMPTRAPD=1"
+    restart: unless-stopped
+    networks:
+      - librenms-services

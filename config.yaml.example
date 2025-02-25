@@ -4,12 +4,13 @@ domain_name_enable: false
 domain_name: 'infra.box'
 
 # The main domain names - eg pihole.infra.box
-domain_pihole: 'pihole'
-domain_dockge: 'dockge'
-domain_phpipam: 'phpipam'
-domain_traefik: 'traefik'
-domain_tftp: 'tftp'
 domain_directorybrowser: 'files'
+domain_dockge: 'dockge'
+domain_librenms: 'librenms'
+domain_phpipam: 'phpipam'
+domain_pihole: 'pihole'
+domain_tftp: 'tftp'
+domain_traefik: 'traefik'
 
 # Global settings
 timezone: Europe/Brussels
@@ -32,6 +33,12 @@ pihole_password: "Infra.Box"
 phpipam_port: 8100
 phpipam_password: "Infra.Box"
 phpipam_db_password: "Infra.Box"
+
+# Phpipam configuration
+librenms_port: 8000
+librenms_snmp_community: "librenmscommunity"
+librenms_db_user: "librenms"
+librenms_db_pass: "Infra.Box"
 
 # Gossa directory browser
 directorybrowser_port: 8001
