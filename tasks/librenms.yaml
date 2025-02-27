@@ -9,7 +9,7 @@
 
 - name: Create librenms data directory
   file:
-    path: "{{ stacks_folder }}/librenms/data/data"
+    path: "{{ stacks_folder }}/librenms/data"
     state: directory
     owner: root
     group: docker
